@@ -18,20 +18,38 @@ target_compile_features(
     PUBLIC cxx_std_14
 )
 
-add_compile_definitions(QSIZE=100)
+target_compile_definitions(IReflx PRIVATE QSIZE=100)
 
-file(GLOB SRC_LIST
-	src/*.cpp)
-
-target_sources(IReflx PRIVATE ${SRC_LIST})
-
-set_property(TARGET IReflx PROPERTY POSITION_INDEPENDENT_CODE ON)
+target_sources(IReflx
+  PUBLIC
+    include/IReflx/CommandLineParser.h
+    include/IReflx/IStarReflextor.h
+  PRIVATE
+    src/BaseIOInterface.cpp
+    src/BaseIOInterface.h
+    src/BoundedBuffer.h
+    src/CommandLineParser.cpp
+    src/GmtiReader.cpp
+    src/GmtiReader.h
+    src/IStarReflextor.cpp
+    src/IStarReflextor.h
+    src/SourceReader.cpp
+    src/SourceReader.h
+    src/StdinReader.cpp
+    src/StdinReader.h
+    src/UdpData.cpp
+    src/UdpData.h
+    src/UdpListener.cpp
+    src/UdpListener.h
+    src/UdpSender.cpp
+    src/UdpSender.h
+)
 
 if(WIN32)
-    set(WS wsock32 ws2_32)
+  target_link_libraries(IReflx wsock32 ws2_32)
+else()
+  target_link_libraries(IReflx)
 endif()
-
-target_link_libraries(IReflx ${WS})
 
 target_include_directories(IReflx
 		PRIVATE src/IReflx

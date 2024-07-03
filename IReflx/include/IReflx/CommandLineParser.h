@@ -11,6 +11,8 @@ namespace ThetaStream
 		~CommandLineParser();
 		CommandLineParser(const CommandLineParser& other);
 		CommandLineParser& operator=(const CommandLineParser& rhs);
+		CommandLineParser(CommandLineParser&& src) noexcept;
+		CommandLineParser& operator=(CommandLineParser&& rhs) noexcept;
 
 		void parse(int argc, char** argv, const char* appname);
 
@@ -23,8 +25,6 @@ namespace ThetaStream
 		int ttl() const;
 
 	private:
-		void swap(CommandLineParser& other);
-
 		class Impl;
 		std::unique_ptr<Impl> _pimpl;
 	};
