@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const char* usage = "Usage: IReflx <OPTIONS>";
+const char* usage = "Usage: IReflxApp <OPTIONS>";
 const char* opts = "  -s\tSource socket address; otherwise, stdin.\n \
  -d\tDestination socket address; otherwise, stdout.\n \
  -t\tTime to Live. (default: 16)\n \
