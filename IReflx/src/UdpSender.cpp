@@ -38,9 +38,15 @@ const int BUFLEN = 1500;
 class UdpSender::Impl
 {
 public:
-	Impl(BaseIOInterface::QueueType& q)
+	Impl(UdpSender::QueueType& q)
 		:_queue(q)
 	{}
+
+	~Impl() {}
+
+public:
+	void send(const UdpData& data);
+	void initSocket(const char* ipaddr, uint32_t port, unsigned char ttl, const char* iface_addr);
 
 public:
 	SOCKET _socket{INVALID_SOCKET};
@@ -65,7 +71,7 @@ UdpSender::UdpSender(const char* ipaddr, uint32_t port, UdpSender::QueueType& q,
 	}
 	else // write the data to stdout
 	{
-		initSocket(ipaddr, port, ttl, iface_addr);
+		_pimpl->initSocket(ipaddr, port, ttl, iface_addr);
 	}
 }
 
@@ -74,7 +80,7 @@ UdpSender::~UdpSender(void)
 
 }
 
-void UdpSender::initSocket(const char* ipaddr, uint32_t port, unsigned char ttl, const char* iface_addr)
+void UdpSender::Impl::initSocket(const char* ipaddr, uint32_t port, unsigned char ttl, const char* iface_addr)
 {
 	char szErr[BUFSIZ]{};
 	IN_ADDR inaddr;
@@ -93,8 +99,8 @@ void UdpSender::initSocket(const char* ipaddr, uint32_t port, unsigned char ttl,
 
 	//----------------------
 	// Create a SOCKET for connecting to server
-	_pimpl->_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (_pimpl->_socket == INVALID_SOCKET) {
+	_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (_socket == INVALID_SOCKET) {
 #ifdef _WIN32
 		WSACleanup();
 		sprintf(szErr, "Error at socket(): %d", WSAGetLastError());
@@ -109,7 +115,7 @@ void UdpSender::initSocket(const char* ipaddr, uint32_t port, unsigned char ttl,
 	unsigned char optVal = ttl;
 	int optLen = sizeof(optVal);
 
-	if (setsockopt(_pimpl->_socket, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&optVal, optLen) == SOCKET_ERROR)
+	if (setsockopt(_socket, IPPROTO_IP, IP_MULTICAST_TTL, (char*)&optVal, optLen) == SOCKET_ERROR)
 	{
 #ifdef _WIN32
 		WSACleanup();
@@ -124,7 +130,7 @@ void UdpSender::initSocket(const char* ipaddr, uint32_t port, unsigned char ttl,
 	if (strlen(iface_addr) > 0)
 	{
 		inet_pton(AF_INET, iface_addr, (PVOID)&inaddr);
-		if (setsockopt(_pimpl->_socket, IPPROTO_IP, IP_MULTICAST_IF, (char*)&inaddr.s_addr, sizeof(inaddr.s_addr)) == SOCKET_ERROR)
+		if (setsockopt(_socket, IPPROTO_IP, IP_MULTICAST_IF, (char*)&inaddr.s_addr, sizeof(inaddr.s_addr)) == SOCKET_ERROR)
 		{
 #ifdef _WIN32
 			WSACleanup();
@@ -151,11 +157,11 @@ void UdpSender::initSocket(const char* ipaddr, uint32_t port, unsigned char ttl,
 	//----------------------
 	// The sockaddr_in structure specifies the address family,
 	// IP address, and port for the socket that is being send to
-	_pimpl->_recvAddr.sin_family = AF_INET;
-	_pimpl->_recvAddr.sin_addr.s_addr = inaddr.s_addr;
-	_pimpl->_recvAddr.sin_port = htons(port);
+	_recvAddr.sin_family = AF_INET;
+	_recvAddr.sin_addr.s_addr = inaddr.s_addr;
+	_recvAddr.sin_port = htons(port);
 
-	_pimpl->_address = _pimpl->_recvAddr.sin_addr.s_addr;
+	_address = _recvAddr.sin_addr.s_addr;
 }
 
 void UdpSender::stop()
@@ -180,15 +186,15 @@ void UdpSender::operator()()
 		const bool hasData = _pimpl->_queue.Get(std::forward<UdpData>(d), 100);
 		if (hasData)
 		{
-			send(d);
+			_pimpl->send(d);
 		}
 	}
 }
 
-void UdpSender::send(const UdpData& data)
+void UdpSender::Impl::send(const UdpData& data)
 {
 	// Write the data to the standard console out
-	if (_pimpl->_socket == INVALID_SOCKET)
+	if (_socket == INVALID_SOCKET)
 	{
 		size_t w = 0;
 		for (size_t nleft = data.length(); nleft > 0;)
@@ -200,8 +206,8 @@ void UdpSender::send(const UdpData& data)
 			}
 			else
 			{
-				_pimpl->_count++;
-				_pimpl->_bytes += data.length();
+				_count++;
+				_bytes += data.length();
 			}
 			nleft -= w;
 			fflush(stdout);
@@ -209,12 +215,12 @@ void UdpSender::send(const UdpData& data)
 	}
 	else // Send the data onto a socket
 	{
-		const int status = sendto(_pimpl->_socket,
+		const int status = sendto(_socket,
 			(char*)data.data(),
 			(int)data.length(),
 			0,
-			(SOCKADDR*)&_pimpl->_recvAddr,
-			sizeof(_pimpl->_recvAddr));
+			(SOCKADDR*)&_recvAddr,
+			sizeof(_recvAddr));
 
 		if (status == SOCKET_ERROR)
 		{
@@ -226,8 +232,8 @@ void UdpSender::send(const UdpData& data)
 		}
 		else
 		{
-			_pimpl->_count++;
-			_pimpl->_bytes += data.length();
+			_count++;
+			_bytes += data.length();
 		}
 	}
 }

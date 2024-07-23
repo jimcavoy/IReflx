@@ -46,6 +46,7 @@ target_sources(IReflx
 )
 
 if(WIN32)
+  include_directories(../../)
   target_link_libraries(IReflx wsock32 ws2_32)
 else()
   target_link_libraries(IReflx)

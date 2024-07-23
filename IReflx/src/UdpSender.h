@@ -3,30 +3,28 @@
 #include "BaseIOInterface.h"
 
 class UdpSender :
-	public BaseIOInterface
+    public BaseIOInterface
 {
 public:
-	UdpSender(const char* ipaddr, uint32_t port, BaseIOInterface::QueueType& queue, unsigned char ttl, const char* iface_addr);
-	~UdpSender();
+    typedef BoundedBuffer<UdpData, QSIZE> QueueType;
+public:
+    UdpSender(const char* ipaddr, uint32_t port, QueueType& queue, unsigned char ttl, const char* iface_addr);
+    ~UdpSender();
 
-	void operator()();
+    void operator()();
 
-	void stop() override;
+    void stop();
 
-	uint64_t count() noexcept override;
+    uint64_t count() noexcept;
 
-	uint64_t bytes() noexcept override;
+    uint64_t bytes() noexcept;
 
-	uint32_t address() noexcept override;
+    uint32_t address() noexcept;
 
-	uint32_t port() noexcept override;
-
-private:
-	void send(const UdpData& data);
-	void initSocket(const char* ipaddr, uint32_t port, unsigned char ttl, const char* iface_addr);
+    uint32_t port() noexcept;
 
 private:
-	class Impl;
-	std::unique_ptr<Impl> _pimpl;
+    class Impl;
+    std::unique_ptr<Impl> _pimpl;
 };
 
