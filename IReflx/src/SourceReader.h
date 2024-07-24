@@ -1,13 +1,13 @@
 #pragma once
 
 #include "BaseIOInterface.h"
-#include "UdpData.h"
+#include "QueueType.h"
 
 class SourceReader :
     public BaseIOInterface
 {
 public:
-    SourceReader(const char* ipmulticast, uint32_t port, BaseIOInterface::QueueType& queue, const char* iface_addr);
+    SourceReader(const char* ipmulticast, uint32_t port, QueueType& queue, const char* iface_addr);
     virtual ~SourceReader();
 
     void stop() noexcept override;

@@ -49,7 +49,7 @@ namespace ThetaStream
 
     int IStarReflextor::run()
     {
-        BaseIOInterface::QueueType queue;
+        QueueType queue;
 
         SourceReader reader(_pimpl->_cmdLine.sourceIp(), _pimpl->_cmdLine.sourcePort(), queue, _pimpl->_cmdLine.sourceInterfaceAddress());
         UdpSender sender(_pimpl->_cmdLine.destinationIp(), _pimpl->_cmdLine.destinationPort(), queue, _pimpl->_cmdLine.ttl(), _pimpl->_cmdLine.destinationInterfaceAddress());
@@ -75,10 +75,6 @@ namespace ThetaStream
         perfCounter.stop();
         perfCounterThread.join();
 #endif
-
-        _pimpl->_inCount = reader.count();
-        _pimpl->_outCount = sender.count();
-
         return 0;
     }
 
@@ -86,6 +82,9 @@ namespace ThetaStream
     {
         _pimpl->_sourceReader->stop();
         _pimpl->_destReader->stop();
+
+        _pimpl->_inCount = _pimpl->_sourceReader->count();
+        _pimpl->_outCount = _pimpl->_destReader->count();
     }
 
     uint64_t IStarReflextor::inCount() const

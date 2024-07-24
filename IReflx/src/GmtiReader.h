@@ -2,13 +2,14 @@
 
 
 #include "BaseIOInterface.h"
+#include "QueueType.h"
 #include <vector>
 
 class GmtiReader :
     public BaseIOInterface
 {
 public:
-    GmtiReader(BaseIOInterface::QueueType& queue);
+    GmtiReader(QueueType& queue);
     virtual ~GmtiReader();
 
     void stop() noexcept override;
@@ -27,7 +28,7 @@ private:
     uint64_t _count;
     uint64_t _bytes;
     bool _run;
-    BaseIOInterface::QueueType& _queue;
+    QueueType& _queue;
     int _packetSize;
     int _pos;
     uint8_t _packetSizeBuf[4]{};

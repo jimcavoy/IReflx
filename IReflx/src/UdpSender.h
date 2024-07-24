@@ -1,12 +1,11 @@
 #pragma once
 
 #include "BaseIOInterface.h"
+#include "QueueType.h"
 
 class UdpSender :
     public BaseIOInterface
 {
-public:
-    typedef BoundedBuffer<UdpData, QSIZE> QueueType;
 public:
     UdpSender(const char* ipaddr, uint32_t port, QueueType& queue, unsigned char ttl, const char* iface_addr);
     ~UdpSender();

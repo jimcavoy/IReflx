@@ -38,8 +38,9 @@ const int BUFLEN = 1500;
 class UdpSender::Impl
 {
 public:
-	Impl(UdpSender::QueueType& q)
-		:_queue(q)
+	Impl(uint32_t port, QueueType& q)
+		: _port(port)
+		, _queue(q)
 	{}
 
 	~Impl() {}
@@ -59,10 +60,9 @@ public:
 	uint32_t _port{};
 };
 
-UdpSender::UdpSender(const char* ipaddr, uint32_t port, UdpSender::QueueType& q, unsigned char ttl, const char* iface_addr)
+UdpSender::UdpSender(const char* ipaddr, uint32_t port, QueueType& q, unsigned char ttl, const char* iface_addr)
+	: _pimpl(std::make_unique<UdpSender::Impl>(port, q))
 {
-	_pimpl = std::make_unique<UdpSender::Impl>(q);
-
 	if (strcmp(ipaddr, "-") == 0) // send the data onto a socket
 	{
 #ifdef _WIN32

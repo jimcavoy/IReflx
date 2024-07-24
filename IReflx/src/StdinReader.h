@@ -1,14 +1,14 @@
 #pragma once
 
 #include "BaseIOInterface.h"
-#include "BoundedBuffer.h"
-#include "UdpData.h"
+#include "QueueType.h"
+
 
 class StdinReader :
     public BaseIOInterface
 {
 public:
-    StdinReader(BaseIOInterface::QueueType& queue);
+    StdinReader(QueueType& queue);
     virtual ~StdinReader();
 
     void stop() noexcept override;
@@ -27,6 +27,6 @@ private:
     uint64_t _count;
     uint64_t _bytes;
     bool _run;
-    BaseIOInterface::QueueType& _queue;
+    QueueType& _queue;
 };
 

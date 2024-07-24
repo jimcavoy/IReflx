@@ -1,14 +1,14 @@
 #pragma once
 
 #include "BaseIOInterface.h"
-
+#include "QueueType.h"
 #include <memory>
 
 class UdpListener :
     public BaseIOInterface
 {
 public:
-    UdpListener(const char* ipmulticast, uint32_t port, BaseIOInterface::QueueType& queue, const char* iface_addr);
+    UdpListener(const char* ipmulticast, uint32_t port, QueueType& queue, const char* iface_addr);
     virtual ~UdpListener(void);
 
     void stop() noexcept override;
