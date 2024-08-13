@@ -43,12 +43,19 @@ target_sources(IReflx
     src/UdpListener.h
     src/UdpSender.cpp
     src/UdpSender.h
+    src/QueueType.h
 )
 
 if(WIN32)
-  target_link_libraries(IReflx wsock32 ws2_32)
+  target_link_libraries(IReflx PUBLIC wsock32 ws2_32)
 else()
   target_link_libraries(IReflx)
+endif()
+
+if(PERFCNTR)
+  target_include_directories(IReflx PUBLIC ../../)
+  target_link_libraries(IReflx PUBLIC IReflxPerfCntr)
+  target_link_directories(IReflx PUBLIC ../../x64/Debug ../../x64/Release)
 endif()
 
 target_include_directories(IReflx

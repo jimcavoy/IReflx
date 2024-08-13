@@ -6,7 +6,7 @@
 #include "StdinReader.h"
 #include "GmtiReader.h"
 
-SourceReader::SourceReader(const char* ipmulticast, uint32_t port, BaseIOInterface::QueueType& queue, const char* iface_addr)
+SourceReader::SourceReader(const char* ipmulticast, uint32_t port, QueueType& queue, const char* iface_addr)
 	: _pimpl(nullptr)
 {
 	if (ipmulticast != nullptr && strcmp(ipmulticast, "-") != 0)

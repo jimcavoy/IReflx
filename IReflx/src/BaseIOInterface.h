@@ -2,18 +2,8 @@
 
 #include <cstdint>
 
-#include "BoundedBuffer.h"
-#include "UdpData.h"
-
-#ifndef QSIZE
-#define QSIZE 100
-#endif
-
 class BaseIOInterface
 {
-public:
-	typedef BoundedBuffer<UdpData, QSIZE> QueueType;
-
 public:
 	BaseIOInterface(void);
 	virtual ~BaseIOInterface(void);

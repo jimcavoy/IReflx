@@ -37,8 +37,10 @@ using namespace std;
 class UdpListener::Impl
 {
 public:
-	Impl(BaseIOInterface::QueueType& q)
-		:_queue(q)
+	Impl(const char* ipmulticast, uint32_t port, QueueType& q)
+		: _ipmcast(ipmulticast)
+		, _port(port)
+		, _queue(q)
 	{
 
 	}
@@ -48,15 +50,15 @@ public:
 	uint64_t _bytes{};
 	SOCKET _listenSocket{ INVALID_SOCKET };
 	bool _run{true};
-	BaseIOInterface::QueueType& _queue;
+	QueueType& _queue;
 	std::string _ipmcast{};
 	uint32_t _address{};
 	uint32_t _port{};
 };
 
-UdpListener::UdpListener(const char* ipmulticast, uint32_t port, BaseIOInterface::QueueType& queue, const char* iface_addr)
+UdpListener::UdpListener(const char* ipmulticast, uint32_t port, QueueType& queue, const char* iface_addr)
+	: _pimpl(std::make_unique <UdpListener::Impl>(ipmulticast, port, queue))
 {
-	_pimpl = std::make_unique <UdpListener::Impl>(queue);
 	char szErr[BUFSIZ]{};
 
 #ifdef _WIN32
