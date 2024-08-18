@@ -14,12 +14,15 @@ The console application __IReflxApp__ is an executable and provides a command li
 ## How to Build
 
 This project uses CMake to generate build environment, build, and install the application, IReflxApp. Do the following steps:
-
-1. cmake -S . -B ./build
-
-2. cmake --build ./build
-
-3. cmake --install ./build
+```
+cmake -S . -B ./build -A x64
+```
+```
+cmake --build ./build
+```
+```
+cmake --install ./build
+```
 
 Add cmake parameters that is required for your host development environment.
 
@@ -40,19 +43,19 @@ Options:
 ### Example 1
 Redirect a transmitted UDP/IP stream to a new socket address.
  ```
-> IReflxApp -s 239.3.1.11:50000 -d 192.168.0.24:50001
+IReflxApp -s 239.3.1.11:50000 -d 192.168.0.24:50001
 ```
 
 ### Example 2
 Redirect a transmitted UDP/IP stream to a pipe that is an input to another application.
 
 ```
-> IReflxApp -s 239.3.1.11:50000 | AnotherApp.exe
+IReflxApp -s 239.3.1.11:50000 | AnotherApp.exe
 ```
 
 ### Example 3 
 Read a pipe as an input and stream it.
 
 ```
-> SomeApp.exe | IReflxApp -d 239.3.1.11:50000
+SomeApp.exe | IReflxApp -d 239.3.1.11:50000
 ```
