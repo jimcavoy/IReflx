@@ -1,6 +1,7 @@
 #pragma once
 
 #include <IReflx/CommandLineParser.h>
+#include <cstdint>
 
 namespace ThetaStream
 {
