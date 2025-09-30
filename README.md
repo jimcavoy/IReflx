@@ -11,20 +11,32 @@ The source files are located in the `IReflx` folder.
 ### Console Application (IReflxApp)
 The console application __IReflxApp__ is an executable and provides a command line interface to the __IReflx__ library.  The source file for the main program is located under the `src` folder.
 
-## How to Build
+## How to Build on Windows
 
-This project uses CMake to generate build environment, build, and install the application, IReflxApp. Do the following steps:
+This project uses CMake to generate a build environment, build, and install the __IReflxApp__ application. Do the following steps:
 ```
 cmake -S . -B ./build -A x64
 ```
 ```
 cmake --build ./build
 ```
+Before you install __IReflxApp__, ensure you open the console in Administrator mode.
 ```
 cmake --install ./build
 ```
 
-Add cmake parameters that is required for your host development environment.
+## How to Build on Linux
+
+This project uses CMake to generate a build environment, build, and install the __IReflxApp__ application. Do the following steps:
+```
+cmake -S . -B ./build
+```
+```
+cmake --build ./build
+```
+```
+sudo cmake --install ./build
+```
 
 ## Usage
 The __IReflxApp__ usage is as follows:
