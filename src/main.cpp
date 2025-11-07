@@ -30,7 +30,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType)
 
 void PrintHeader()
 {
-	std::cerr << "ISTAR Reflextor Console Application" << std::endl;
+	std::cerr << "ISTAR Reflextor Console Application 1.0.0" << std::endl;
 	std::cerr << "Developed by James McAvoy, jimcavoy@thetastream.com, ThetaStream Consulting" << std::endl << std::endl;
 	std::cerr << std::endl << "Enter Ctrl-C to exit" << std::endl << std::endl;
 }

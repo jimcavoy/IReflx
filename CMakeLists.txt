@@ -39,4 +39,15 @@ target_link_libraries(IReflxApp PRIVATE IReflx)
 
 install (TARGETS IReflxApp)
 
+# Create Package
+set(CPACK_PACKAGE_NAME "IReflxApp")
+set(CPACK_PACKAGE_VENDOR "ThetaStream Consulting")
+set(CPACK_PACKAGE_CONTACT "jimcavoy@thetastream.com")
+set(CPACK_PACKAGE_DESCRIPTION, "Application to redirect UDP/IP streams to a different socket address.")
+if (UNIX)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_GENERATOR "DEB")
+endif ()
+include(CPack)
+
 # Test cases
